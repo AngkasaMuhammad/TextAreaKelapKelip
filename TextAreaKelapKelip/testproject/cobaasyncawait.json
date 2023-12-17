@@ -1,0 +1,46 @@
+[
+	[
+		{
+			"text": "Welcome!fgtdfhrtfg",
+			"visible": true,
+			"time": "42.4640999999997",
+			"speed": "1",
+			"running": true,
+			"color": [
+				{
+					"r": "255",
+					"g": "255",
+					"b": "255",
+					"frame": "0"
+				},
+				{
+					"r": "111",
+					"g": "111",
+					"b": "111",
+					"frame": "0.4"
+				},
+				{
+					"r": "0",
+					"g": "255",
+					"b": "255",
+					"frame": "0.9"
+				}
+			]
+		},
+		{
+			"text": "gtrh\n.\nfrytj\n\ny",
+			"visible": true,
+			"time": "0",
+			"speed": "1",
+			"running": false,
+			"color": [
+				{
+					"r": "0",
+					"g": "111",
+					"b": "111",
+					"frame": "0"
+				}
+			]
+		}
+	]
+]
