@@ -20,7 +20,20 @@ let taa = {}
 	let tadipilih = null
 	let linedipilih = null
 	
-	let f_newline = taa.f_newline = ()=>{
+	let defaultarrcolor = [{
+		r	:255	,
+		g	:255	,
+		b	:255	,
+		frame	:0	,
+	}]
+	let f_newline = taa.f_newline = (
+			text	= ''	,
+			visible	= true	,
+			time	= 0	,
+			speed	= 1	,
+			running	= false	,
+			arrcolor	= defaultarrcolor	,
+		)=>{
 		let ele = document.createElement('div')
 		let hasilline = document.createElement('span')
 		
@@ -33,7 +46,15 @@ let taa = {}
 		}
 		linedipilih = ele
 		tadipilih = null
-		f_newta()
+		f_newta(
+			ele	,
+			text	,
+			visible	,
+			time	,
+			speed	,
+			running	,
+			arrcolor	,
+		)
 		
 		
 		
@@ -41,29 +62,32 @@ let taa = {}
 	}
 	let textareaid = 0//bertambah terus
 	let colorid = 0//bertambah terus
-	let f_newta = taa.f_newta = (/*
+	let f_newta = taa.f_newta = (
+			divline		,
 			text	= ''	,
 			visible	= true	,
 			time	= 0	,
 			speed	= 1	,
 			running	= false	,
-		*/)=>{
+			arrcolor	= defaultarrcolor	,
+		)=>{
 		que(`tbody.muncul`)[0]?.classList.remove('muncul')
 		
 		let ele	= document.createElement('textarea')	;attr(ele	,'textareaid',textareaid,)
 		let hasiltextarea	= document.createElement('span')	;attr(hasiltextarea	,'textareaid',textareaid,)
 		let tbody	= document.createElement('tbody')	;attr(tbody	,'textareaid',textareaid,)
 		que('#timeline > table')[0].appendChild(tbody)
-		attr(tbody,'time',0,)
-		attr(tbody,'speed',1,)
+		attr(tbody,'time',time,)
+		attr(tbody,'speed',speed,)
+		running?attr(tbody,'running','',):0
 		let tr_r	= document.createElement('tr');tbody.appendChild(tr_r)
 		let tr_g	= document.createElement('tr');tbody.appendChild(tr_g)
 		let tr_b	= document.createElement('tr');tbody.appendChild(tr_b)
 		let tr_frame	= document.createElement('tr');tbody.appendChild(tr_frame)
 		
-		ele	.addEventListener('focus'	,f_tafocus	,)
+		ele	.addEventListener('focus'	,e=>f_tafocus(e.currentTarget)	,)
 		ele	.addEventListener('input'	,inputtextarea	,)
-		ele	.addEventListener('change'	,changetextarea	,)
+		ele	.addEventListener('change'	,e=>changetextarea(e.currentTarget)	,)
 		ele	.addEventListener('mouseenter'	,tahover	,)
 		ele	.addEventListener('mouseleave'	,tahover	,)
 		hasiltextarea	.addEventListener('mouseenter'	,tahover	,)
@@ -73,12 +97,13 @@ let taa = {}
 		ele.autocapitalize =
 		ele.autocomplete = 'off'
 		ele.spellcheck = false
+		ele.value = text
 		
 		if(tadipilih){
 			tadipilih.insertAdjacentElement('afterEnd',ele,)
 			getspan(getid(tadipilih)).insertAdjacentElement('afterEnd',hasiltextarea,)
 		}else{
-			linedipilih.appendChild(ele)
+			divline.appendChild(ele)
 			for(let carispan of Array.from(hasil.children)){
 				if(!carispan.children.length){
 					carispan.appendChild(hasiltextarea)
@@ -87,11 +112,14 @@ let taa = {}
 			}
 		}
 		tadipilih = ele
-		f_newcolor()
-		ele.focus()
+		for(let {r,g,b,frame,} of arrcolor){
+			f_newcolor(tbody,r,g,b,frame,)
+		}
+		pilihcolor(gettd(getcolorid(tbody.children[3].firstElementChild)))
 		resizetextarea()
-		
 		textareaid++
+		changetextarea(ele)
+		
 		return ele
 	}
 	let getid = taa.getid = ele=>attr(ele,'textareaid',)
@@ -100,41 +128,43 @@ let taa = {}
 	let gettextarea	= taa.gettextarea	= id=>que(`textarea[textareaid="${id}"]`)[0]
 	let getspan	= taa.getspan	= id=>que(`span[textareaid="${id}"]`)[0]
 	let gettd = taa.gettd = id=>que(`td[colorid="${id}"]`)
-	let f_newcolor = ()=>{
-		let tbody = gettbody(getid(tadipilih))
-		let tr_r	= tbody.children[0],td_r	= document.createElement('td'),inp_r	= document.createElement('input');tr_r	.appendChild(td_r	);td_r	.appendChild(inp_r	);attr(td_r	,'colorid',colorid,);inp_r	.type = "number";inp_r	.value = inp_r.max = 255;inp_r.min = 0
-		let tr_g	= tbody.children[1],td_g	= document.createElement('td'),inp_g	= document.createElement('input');tr_g	.appendChild(td_g	);td_g	.appendChild(inp_g	);attr(td_g	,'colorid',colorid,);inp_g	.type = "number";inp_g	.value = inp_g.max = 255;inp_g.min = 0
-		let tr_b	= tbody.children[2],td_b	= document.createElement('td'),inp_b	= document.createElement('input');tr_b	.appendChild(td_b	);td_b	.appendChild(inp_b	);attr(td_b	,'colorid',colorid,);inp_b	.type = "number";inp_b	.value = inp_b.max = 255;inp_b.min = 0
-		let tr_frame	= tbody.children[3],td_frame	= document.createElement('td'),inp_frame	= document.createElement('input');tr_frame	.appendChild(td_frame	);td_frame	.appendChild(inp_frame	);attr(td_frame	,'colorid',colorid,);inp_frame	.type = "number";
+	
+	let f_newcolor = (
+		tbody	= null	,
+		r	= 255	,
+		g	= 255	,
+		b	= 255	,
+		frame	= 0	,
+	)=>{
+		let tr_r	= tbody.children[0],td_r	= document.createElement('td'),inp_r	= document.createElement('input');tr_r	.appendChild(td_r	);td_r	.appendChild(inp_r	);attr(td_r	,'colorid',colorid,);attr(inp_r	,'mousedescr','red'	,);inp_r	.type = "number";inp_r	.step = 'any';inp_r	.value = r	;inp_r.max = 255;inp_r.min = 0
+		let tr_g	= tbody.children[1],td_g	= document.createElement('td'),inp_g	= document.createElement('input');tr_g	.appendChild(td_g	);td_g	.appendChild(inp_g	);attr(td_g	,'colorid',colorid,);attr(inp_g	,'mousedescr','green'	,);inp_g	.type = "number";inp_g	.step = 'any';inp_g	.value = g	;inp_g.max = 255;inp_g.min = 0
+		let tr_b	= tbody.children[2],td_b	= document.createElement('td'),inp_b	= document.createElement('input');tr_b	.appendChild(td_b	);td_b	.appendChild(inp_b	);attr(td_b	,'colorid',colorid,);attr(inp_b	,'mousedescr','blue'	,);inp_b	.type = "number";inp_b	.step = 'any';inp_b	.value = b	;inp_b.max = 255;inp_b.min = 0
+		let tr_frame	= tbody.children[3],td_frame	= document.createElement('td'),inp_frame	= document.createElement('input');tr_frame	.appendChild(td_frame	);td_frame	.appendChild(inp_frame	);attr(td_frame	,'colorid',colorid,);attr(inp_frame	,'mousedescr','frame'	,);inp_frame	.type = "number";inp_frame	.step = 'any';inp_frame	.value = frame	
 		
-		let tdframetadi = que('tbody.muncul .colordipilih')[3]
-		if(tr_frame.children.length === 1){
-			inp_frame.value = 0
-		}else if(tdframetadi === td_frame.previousSibling){
-			inp_frame.value = +td_frame.previousSibling.firstElementChild.value+1
-		}else{
-			inp_frame.value = (
-				+tdframetadi.firstElementChild.value
-				+ +tdframetadi.nextSibling.firstElementChild.value
-			)/2
-		}
-		
-		inp_r	.addEventListener('input',f_inp_rgb,)	;inp_r	.addEventListener('change',f_inp_rgb,)	;inp_r	.addEventListener('focus',f_rgbfocus,)	
-		inp_g	.addEventListener('input',f_inp_rgb,)	;inp_g	.addEventListener('change',f_inp_rgb,)	;inp_g	.addEventListener('focus',f_rgbfocus,)	
-		inp_b	.addEventListener('input',f_inp_rgb,)	;inp_b	.addEventListener('change',f_inp_rgb,)	;inp_b	.addEventListener('focus',f_rgbfocus,)	
-		inp_frame	.addEventListener('input',urutkan,)	;inp_frame	.addEventListener('change',urutkan,)	;inp_frame	.addEventListener('focus',f_rgbfocus,)	
+		inp_r	.addEventListener('input',f_inp_rgb,)	;inp_r	.addEventListener('change',f_inp_rgb,)	;inp_r	.addEventListener('focus',f_rgbfocus,);inp_r	.addEventListener('mouseenter',datang,);inp_r	.addEventListener('mouseleave',pergi,)
+		inp_g	.addEventListener('input',f_inp_rgb,)	;inp_g	.addEventListener('change',f_inp_rgb,)	;inp_g	.addEventListener('focus',f_rgbfocus,);inp_g	.addEventListener('mouseenter',datang,);inp_g	.addEventListener('mouseleave',pergi,)
+		inp_b	.addEventListener('input',f_inp_rgb,)	;inp_b	.addEventListener('change',f_inp_rgb,)	;inp_b	.addEventListener('focus',f_rgbfocus,);inp_b	.addEventListener('mouseenter',datang,);inp_b	.addEventListener('mouseleave',pergi,)
+		inp_frame	.addEventListener('input',urutkan,)	;inp_frame	.addEventListener('change',urutkan,)	;inp_frame	.addEventListener('focus',f_rgbfocus,);inp_frame	.addEventListener('mouseenter',datang,);inp_frame	.addEventListener('mouseleave',pergi,)
 		
 		urutkan()
-		updcanv()
 		updwarnatext(tbody)
-		inp_frame.dispatchEvent(new FocusEvent('focus'))
 		colorid++
+		
+		return [
+			td_r	,
+			td_g	,
+			td_b	,
+			td_frame	,
+		]
 	}
 	let f_rgbfocus = e=>{
 		for(let ele of Array.from(que('tbody.muncul .colordipilih'))){
 			ele.classList.remove('colordipilih')
 		}
-		for(let td of Array.from(gettd(getcolorid(e.currentTarget.parentElement)))){
+		pilihcolor(gettd(getcolorid(e.currentTarget.parentElement)))
+	}
+	let pilihcolor = color=>{
+		for(let td of Array.from(color)){
 			td.classList.add('colordipilih')
 		}
 	}
@@ -143,7 +173,7 @@ let taa = {}
 		updwarnatext(gettbody(getid(tadipilih)))
 	}
 	let urutkan = ()=>{
-		let muncul = ru.que('tbody.muncul')[0]
+		let muncul = que('tbody.muncul')[0]
 		if(!muncul){return}
 		let focustadi = document.activeElement
 		for(let id of
@@ -154,7 +184,7 @@ let taa = {}
 		).sort((aa,bb,)=>
 			+aa.firstElementChild.value-
 			bb.firstElementChild.value
-		).map(aa=>ru.attr(aa,'colorid',))){
+		).map(aa=>attr(aa,'colorid',))){
 			let td = taa.gettd(id)
 			td[0].parentElement.appendChild(td[0])
 			td[1].parentElement.appendChild(td[1])
@@ -164,8 +194,8 @@ let taa = {}
 		updcanv()
 		focustadi?.focus?.()
 	}
-	let f_tafocus = e=>{
-		linedipilih = (tadipilih = e.currentTarget).parentElement
+	let f_tafocus = ta=>{
+		linedipilih = (tadipilih = ta).parentElement
 		for(let ele of Array.from(que('.dipilih'))){
 			ele.classList.remove('dipilih')
 		}
@@ -184,13 +214,10 @@ let taa = {}
 	let delaychange
 	let inputtextarea = e=>{
 		clearTimeout(delaychange)
-		delaychange = setTimeout(changetextarea,333,{currentTarget:e.currentTarget,},)
+		delaychange = setTimeout(changetextarea,333,e.currentTarget,)
 		resizetextarea()
 	}
-	let changetextarea = e=>{
-		let ta = e.currentTarget
-		getspan(getid(ta)).textContent = ta.value
-	}
+	let changetextarea = ta=>getspan(getid(ta)).textContent = ta.value
 	let tahover = e=>{
 		let id = getid(e.currentTarget)
 		let ta = gettextarea(id)
@@ -219,9 +246,10 @@ let taa = {}
 			line.style.height = h+'px'
 		}
 	}
-	let fh//file handle
-	let wri//writable
-	let fsave = ()=>{
+	let fhsave//file handle
+	let fhexport//file handle
+	//let wri//writable
+	let fsave = async ()=>{
 		let json = []
 		
 		for(let divline of area.children){
@@ -249,20 +277,41 @@ let taa = {}
 				})
 			}
 		}
-		
-		fh?.createWritable()
+		/*
+		fhsave?.createWritable()
 		.then(paramwri=>
 			(wri = paramwri).write(lih(JSON.stringify(json,null,'\t',)))
 		).then(()=>
 			wri.close()
 		).catch(lih)
+		*/
+		if(!fhsave){return}
+		let wri = await fhsave.createWritable()
+		await wri.write(lih(JSON.stringify(json,null,'\t',)))
+		await wri.close()
 	}
-	let fsaveas = ()=>{
+	let fsaveas = async ()=>{
+		/*
 		showSaveFilePicker()
-		.then(paramfh=>{//file handle
-			attr(save,'mousedescr','Save '+lih(fh = paramfh).name,)
+		.then(paramfhsave=>{//file handle
+			attr(save,'mousedescr','Save '+lih(fhsave = paramfhsave).name,)
 			fsave()
 		}).catch(lih)
+		*/
+		fhsave = await showSaveFilePicker()
+		attr(save,'mousedescr','Save '+fhsave.name,)
+		fsave()
+	}
+	let fexport = async ()=>{
+		if(!fhexport){return}
+		let wri = await fhexport.createWritable()
+		await wri.write(lih(hasil.textContent))
+		await wri.close()
+	}
+	let fexportas = async ()=>{
+		fhexport = await showSaveFilePicker()
+		attr(que('#export')[0],'mousedescr','Export '+fhexport.name,)
+		fexport()
 	}
 	let save = que('#save')[0]
 	let tash = que('#tash')[0]
@@ -295,8 +344,7 @@ let taa = {}
 		for(let ele of tr_frame.children){
 			arrwarna.push(+ele.firstElementChild.value)
 		}
-		let lerp = ru.arrlerp(arrwarna,time,)
-		let {w,i,} = lerp
+		let {w,i,} =  ru.arrlerp(arrwarna,time,)
 		
 		let ta = gettextarea(id)
 		let span = getspan(id)
@@ -309,8 +357,8 @@ let taa = {}
 			1,
 		)
 	}
-	let updtime = tbody=>inptime.value = attr(tbody,'time',)
-	let updspeed = tbody=>inpspeed.value = attr(tbody,'speed',)
+	let updtime = tbody=>inptime.value = (+attr(tbody,'time',)).toFixed(5)
+	let updspeed = tbody=>inpspeed.value = (+attr(tbody,'speed',)).toFixed(5)
 	let updcanv = taa.updcanv = ()=>{
 		let tbody = que('tbody.muncul')[0]//tabel animasi warna
 		if(!tbody){return}
@@ -346,12 +394,60 @@ let taa = {}
 	let lukis = dt=>{
 		for(let tbody of Array.from(que('tbody[running]'))){
 			let time = +attr(tbody,'time',)
-			attr(tbody,'time',time+dt,)
+			attr(tbody,'time',time+dt* +attr(tbody,'speed',),)
 			updwarnatext(tbody)
 			if(tbody.classList.contains('muncul')){
 				updtime(tbody)
 			}
 		}
+	}
+	let poilock = ({currentTarget:ele})=>{
+		ele.requestPointerLock()
+	}
+	let speed = que('#speed')[0]
+	let colorpos = que('#colorpos')[0]
+	let femptyproject = ()=>{
+		lih('project kosong')
+		
+		for(let tbody of que('#timeline > table > tbody')){
+			tbody.remove()
+		}
+		for(let div of que('#area > div')){
+			div.remove()
+		}
+		for(let span of que('#hasil > span')){
+			span.remove()
+		}
+		linedipilih = tadipilih = null
+		
+		attr(save,'mousedescr','Save',)
+		attr(que('#export')[0],'mousedescr','Export',)
+		fhsave = null
+	}
+	let execjson = json=>{
+		lih(json)
+		//
+		let taawal = null
+		for(let divlinesrc of json){
+			let divline = null
+			for(let {
+				text	,
+				visible	,
+				time	,
+				speed	,
+				running	,
+				color	,
+			} of divlinesrc){
+				if(divline){
+					f_newta(divline,text,visible,time,speed,running,color,)
+				}else{
+					divline = f_newline(text,visible,time,speed,running,color,)
+				}
+			}
+			;taawal = taawal??divline.firstElementChild
+		}
+		taawal.focus()
+		
 	}
 	
 	//
@@ -393,7 +489,6 @@ let taa = {}
 		
 		let span = getspan(id)
 		let spanpar = span.parentElement
-		//let spansib = span.previousSibling??span.nextSibling
 		let foceve = new FocusEvent('focus')
 		
 		if(que('#area textarea').length > 1){
@@ -409,9 +504,29 @@ let taa = {}
 			spanpar.remove()
 		}
 	})
-	inptime.addEventListener('input',e=>attr(que('tbody.muncul')[0],'time',e.currentTarget.value,))
+	inptime.addEventListener('input',e=>{
+		attr(que('tbody.muncul')[0],'time',e.currentTarget.value,)
+		updwarnatext(gettbody(getid(tadipilih)))
+	})
 	inpspeed.addEventListener('input',e=>attr(que('tbody.muncul')[0],'speed',e.currentTarget.value,))
-	que('#newcolor')[0].addEventListener('click',f_newcolor,)
+	que('#newcolor')[0].addEventListener('click',()=>{
+		let frame
+		let tdframetadi = que('tbody.muncul .colordipilih')[3]
+		let tbody = gettbody(getid(tadipilih))
+		let tr_frame = tbody.children[3]
+		
+		if(tdframetadi.nextSibling){//jika tidak di paling kanan
+			frame = (
+				+tdframetadi	.firstElementChild.value
+				+ +tdframetadi.nextSibling	.firstElementChild.value
+			)/2
+		}else{
+			frame = +tdframetadi.firstElementChild.value+1
+		}
+		
+		f_newcolor(tbody,255,255,255,frame,)[3].firstElementChild.focus()
+		
+	},)
 	for(let ele of que('[mousedescr]')){
 		ele.addEventListener('mouseenter',datang,)
 		ele.addEventListener('mouseleave',pergi,)
@@ -422,36 +537,112 @@ let taa = {}
 		moutex.style.left = x+'px'
 		moutex.style.top = y+'px'
 	})
-	que('#newline')[0].addEventListener('click',f_newline,)
-	que('#newtextarea')[0].addEventListener('click',f_newta,)
-	//sampe sini, bikin open file
-	que('#open')[0].addEventListener('click',()=>{
-		showOpenFilePicker()
-		.then(([paramfh])=>{//file handle
-			attr(save,'mousedescr','Save '+lih(fh = paramfh).name,)
-			return fh.getFile()
-		}).then(file=>
-			file.text()
-		).then(text=>{
-			let json = lih(JSON.parse(text))
-			for(let divline of json){
-				
-			}
-		}).catch(lih)
+	que('#newline')[0].addEventListener('click',()=>{
+		f_newline().firstElementChild.focus()
+	},)
+	que('#newtextarea')[0].addEventListener('click',()=>{
+		f_newta().focus()
+	},)
+	que('#open')[0].addEventListener('click',async ()=>{
+		let pickfile = await showOpenFilePicker()
+		femptyproject()
+		;[fhsave] = pickfile
+		attr(save,'mousedescr','Save '+fhsave.name,)
+		let json = await fhsave.getFile()
+		json = await json.text()
+		json = JSON.parse(json)
+		execjson(json)
 	})
 	que('#saveas')[0].addEventListener('click',fsaveas,)
-	save.addEventListener('click',()=>fh?fsave():fsaveas(),)
+	save.addEventListener('click',()=>fhsave?fsave():fsaveas(),)
 	addEventListener('beforeunload',e=>{
 		e.returnValue = 'outttt'
 		//return 'kosonggg'
 	},)
 	que('#play'	)[0].addEventListener('click',e=>attr(que('tbody.muncul')[0],'running',''	,))
 	que('#pause'	)[0].addEventListener('click',e=>attr(que('tbody.muncul')[0],'running',null	,))
-	addEventListener('load',e=>{
-		f_newline()
-		requestAnimationFrame(reqani)
+	que('#newproject')[0].addEventListener('click',()=>{
+		if(!confirm('Some changes may not be saved.')){return}
+		femptyproject()
+		f_newline('',true,0,1,false,defaultarrcolor,).firstElementChild.focus()
+	},)
+	que('#exportas')[0].addEventListener('click',fexportas,)
+	que('#export')[0].addEventListener('click',()=>fhexport?fexport():fexportas(),)
+	addEventListener('keydown',e=>{
+		if(
+			(e.keyCode === 9) &&
+			(document.activeElement.tagName === 'TEXTAREA')
+		){
+			e.preventDefault()
+			document.execCommand('insertText',null,'\t',)
+		}
 	})
+	speed.addEventListener('mousedown',poilock,)
+	colorpos.addEventListener('mousedown',poilock,)
+	speed.addEventListener('mousemove',({
+		movementX	:movx	,
+		currentTarget	:ele	,
+	})=>{
+		if(document.pointerLockElement !== ele){return}
+		let tbody = que(`tbody.muncul`)[0]
+		let speed = +attr(tbody,'speed',)
+		attr(tbody,'speed',speed+movx/111,)
+		updspeed(tbody)
+	},)
+	colorpos.addEventListener('mousemove',({
+		movementX	:movx	,
+		currentTarget	:ele	,
+	})=>{
+		if(document.pointerLockElement !== ele){return}
+		let speed = +attr(que(`tbody.muncul`)[0],'speed',)
+		let inp_frame = que(`tbody.muncul .colordipilih`)[3].firstElementChild
+		inp_frame.value = +inp_frame.value+movx*speed/111
+		urutkan()
+		updwarnatext(que('tbody.muncul')[0])
+	},)
+	addEventListener('mouseup',()=>{
+		document.exitPointerLock()
+	})
+	addEventListener('load',async ()=>{
+		let res = await fetch('testproject/selamatdatang.json')//sampe sini
+		let json = await res.json()
+		execjson(json)
+		requestAnimationFrame(reqani)
+		/*
+		return 0
+		f_newline('Welcome!',true,0,1,true,[
+			{
+				r	:255	,
+				g	:255	,
+				b	:255	,
+				frame	:0	,
+			},
+			{
+				r	:111	,
+				g	:111	,
+				b	:111	,
+				frame	:.4	,
+			},
+			{
+				r	:0	,
+				g	:255	,
+				b	:255	,
+				frame	:.9	,
+			},
+			{
+				r	:0	,
+				g	:111	,
+				b	:0	,
+				frame	:1.3	,
+			},
+		]).firstElementChild.focus()
+		requestAnimationFrame(reqani)
+		*/
+	})
+	/*
+	button	speed
 	
+	*/
 	//
 	
 	//

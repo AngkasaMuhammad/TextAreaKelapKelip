@@ -73,7 +73,7 @@ let taa = {}
 		)=>{
 		que(`tbody.muncul`)[0]?.classList.remove('muncul')
 		
-		let ele	= document.createElement('textarea')	;attr(ele	,'textareaid',textareaid,)
+		let ele	= document.createElement('div')	;attr(ele	,'textareaid',textareaid,)
 		let hasiltextarea	= document.createElement('span')	;attr(hasiltextarea	,'textareaid',textareaid,)
 		let tbody	= document.createElement('tbody')	;attr(tbody	,'textareaid',textareaid,)
 		que('#timeline > table')[0].appendChild(tbody)
@@ -85,19 +85,21 @@ let taa = {}
 		let tr_b	= document.createElement('tr');tbody.appendChild(tr_b)
 		let tr_frame	= document.createElement('tr');tbody.appendChild(tr_frame)
 		
-		ele	.addEventListener('focus'	,e=>f_tafocus(e.currentTarget)	,)
-		ele	.addEventListener('input'	,inputtextarea	,)
-		ele	.addEventListener('change'	,e=>changetextarea(e.currentTarget)	,)
+		//ele	.addEventListener('focus'	,e=>f_tafocus(e.currentTarget)	,)
+		ele	.addEventListener('mousedown'	,e=>f_tafocus(e.currentTarget)	,)
+		//ele	.addEventListener('input'	,inputtextarea	,)
+		//ele	.addEventListener('change'	,e=>changetextarea(e.currentTarget)	,)
 		ele	.addEventListener('mouseenter'	,tahover	,)
 		ele	.addEventListener('mouseleave'	,tahover	,)
 		hasiltextarea	.addEventListener('mouseenter'	,tahover	,)
 		hasiltextarea	.addEventListener('mouseleave'	,tahover	,)
-		hasiltextarea	.addEventListener('mousedown'	,()=>{ele.focus();dispatchEvent(new FocusEvent('focus'))}	,)
+		hasiltextarea	.addEventListener('mousedown'	,e=>f_tafocus(gettextarea(getid(e.currentTarget)))	,)
 		
 		ele.autocapitalize =
 		ele.autocomplete = 'off'
 		ele.spellcheck = false
-		ele.value = text
+		//ele.value = text
+		ele.textContent = text
 		
 		if(tadipilih){
 			tadipilih.insertAdjacentElement('afterEnd',ele,)
@@ -116,16 +118,17 @@ let taa = {}
 			f_newcolor(tbody,r,g,b,frame,)
 		}
 		pilihcolor(gettd(getcolorid(tbody.children[3].firstElementChild)))
-		resizetextarea()
+		//resizetextarea()
 		textareaid++
 		changetextarea(ele)
+		ftash(ele,visible,)
 		
 		return ele
 	}
 	let getid = taa.getid = ele=>attr(ele,'textareaid',)
 	let getcolorid = taa.getcolorid = ele=>attr(ele,'colorid',)
 	let gettbody	= taa.gettbody	= id=>que(`tbody[textareaid="${id}"]`)[0]
-	let gettextarea	= taa.gettextarea	= id=>que(`textarea[textareaid="${id}"]`)[0]
+	let gettextarea	= taa.gettextarea	= id=>que(`div[textareaid="${id}"]`)[0]
 	let getspan	= taa.getspan	= id=>que(`span[textareaid="${id}"]`)[0]
 	let gettd = taa.gettd = id=>que(`td[colorid="${id}"]`)
 	
@@ -136,15 +139,15 @@ let taa = {}
 		b	= 255	,
 		frame	= 0	,
 	)=>{
-		let tr_r	= tbody.children[0],td_r	= document.createElement('td'),inp_r	= document.createElement('input');tr_r	.appendChild(td_r	);td_r	.appendChild(inp_r	);attr(td_r	,'colorid',colorid,);inp_r	.type = "number";inp_r	.step = 'any';inp_r	.value = r	;inp_r.max = 255;inp_r.min = 0
-		let tr_g	= tbody.children[1],td_g	= document.createElement('td'),inp_g	= document.createElement('input');tr_g	.appendChild(td_g	);td_g	.appendChild(inp_g	);attr(td_g	,'colorid',colorid,);inp_g	.type = "number";inp_g	.step = 'any';inp_g	.value = g	;inp_g.max = 255;inp_g.min = 0
-		let tr_b	= tbody.children[2],td_b	= document.createElement('td'),inp_b	= document.createElement('input');tr_b	.appendChild(td_b	);td_b	.appendChild(inp_b	);attr(td_b	,'colorid',colorid,);inp_b	.type = "number";inp_b	.step = 'any';inp_b	.value = b	;inp_b.max = 255;inp_b.min = 0
-		let tr_frame	= tbody.children[3],td_frame	= document.createElement('td'),inp_frame	= document.createElement('input');tr_frame	.appendChild(td_frame	);td_frame	.appendChild(inp_frame	);attr(td_frame	,'colorid',colorid,);inp_frame	.type = "number";inp_frame	.step = 'any';inp_frame	.value = frame	
+		let tr_r	= tbody.children[0],td_r	= document.createElement('td'),inp_r	= document.createElement('input');tr_r	.appendChild(td_r	);td_r	.appendChild(inp_r	);attr(td_r	,'colorid',colorid,);attr(inp_r	,'mousedescr','red'	,);inp_r	.type = "number";inp_r	.step = 'any';inp_r	.value = r	;inp_r.max = 255;inp_r.min = 0
+		let tr_g	= tbody.children[1],td_g	= document.createElement('td'),inp_g	= document.createElement('input');tr_g	.appendChild(td_g	);td_g	.appendChild(inp_g	);attr(td_g	,'colorid',colorid,);attr(inp_g	,'mousedescr','green'	,);inp_g	.type = "number";inp_g	.step = 'any';inp_g	.value = g	;inp_g.max = 255;inp_g.min = 0
+		let tr_b	= tbody.children[2],td_b	= document.createElement('td'),inp_b	= document.createElement('input');tr_b	.appendChild(td_b	);td_b	.appendChild(inp_b	);attr(td_b	,'colorid',colorid,);attr(inp_b	,'mousedescr','blue'	,);inp_b	.type = "number";inp_b	.step = 'any';inp_b	.value = b	;inp_b.max = 255;inp_b.min = 0
+		let tr_frame	= tbody.children[3],td_frame	= document.createElement('td'),inp_frame	= document.createElement('input');tr_frame	.appendChild(td_frame	);td_frame	.appendChild(inp_frame	);attr(td_frame	,'colorid',colorid,);attr(inp_frame	,'mousedescr','frame'	,);inp_frame	.type = "number";inp_frame	.step = 'any';inp_frame	.value = frame	
 		
-		inp_r	.addEventListener('input',f_inp_rgb,)	;inp_r	.addEventListener('change',f_inp_rgb,)	;inp_r	.addEventListener('focus',f_rgbfocus,)	
-		inp_g	.addEventListener('input',f_inp_rgb,)	;inp_g	.addEventListener('change',f_inp_rgb,)	;inp_g	.addEventListener('focus',f_rgbfocus,)	
-		inp_b	.addEventListener('input',f_inp_rgb,)	;inp_b	.addEventListener('change',f_inp_rgb,)	;inp_b	.addEventListener('focus',f_rgbfocus,)	
-		inp_frame	.addEventListener('input',urutkan,)	;inp_frame	.addEventListener('change',urutkan,)	;inp_frame	.addEventListener('focus',f_rgbfocus,)	
+		inp_r	.addEventListener('input',f_inp_rgb,)	;inp_r	.addEventListener('change',f_inp_rgb,)	;inp_r	.addEventListener('focus',f_rgbfocus,);inp_r	.addEventListener('mouseenter',datang,);inp_r	.addEventListener('mouseleave',pergi,)
+		inp_g	.addEventListener('input',f_inp_rgb,)	;inp_g	.addEventListener('change',f_inp_rgb,)	;inp_g	.addEventListener('focus',f_rgbfocus,);inp_g	.addEventListener('mouseenter',datang,);inp_g	.addEventListener('mouseleave',pergi,)
+		inp_b	.addEventListener('input',f_inp_rgb,)	;inp_b	.addEventListener('change',f_inp_rgb,)	;inp_b	.addEventListener('focus',f_rgbfocus,);inp_b	.addEventListener('mouseenter',datang,);inp_b	.addEventListener('mouseleave',pergi,)
+		inp_frame	.addEventListener('input',urutkan,)	;inp_frame	.addEventListener('change',urutkan,)	;inp_frame	.addEventListener('focus',f_rgbfocus,);inp_frame	.addEventListener('mouseenter',datang,);inp_frame	.addEventListener('mouseleave',pergi,)
 		
 		urutkan()
 		updwarnatext(tbody)
@@ -206,18 +209,50 @@ let taa = {}
 		}
 		let tbody = gettbody(getid(tadipilih))
 		tbody.classList.add('muncul')
+		
 		updcanv()
 		updtash(tadipilih)
 		updtime(tbody)
 		updspeed(tbody)
+		
+		let c = tadipilih.classList
+		let s = 'tatutup'
+		c.contains(s)?0:bikineditor(ta)
+	}
+	let bikineditor = divtext=>{//divtext = ta
+		if(!divtext.children.length){
+			let editor = document.createElement('textarea')
+			editor.value = divtext.textContent
+			divtext.textContent = ''
+			divtext.appendChild(editor)
+			editor.addEventListener('input',ftulis,)
+			editor.addEventListener('change',ftulis,)
+			editor.addEventListener('blur',hapuseditor,)
+			ftulis({currentTarget:editor})
+			editor.style.color = divtext.style.color
+			setTimeout(()=>editor.focus(),0,)
+		}
+	}
+	let hapuseditor = ({currentTarget:editor})=>{
+		let div = editor.parentElement
+		div.textContent = getspan(getid(div)).textContent
+		editor.remove()
+	}
+	let ftulis = ({currentTarget:editor})=>{
+		let div = editor.parentElement
+		getspan(getid(div)).textContent = editor.value
+		editor.style.width =
+		editor.style.height = '0px'
+		editor.style.width	= div.style.width	= editor.scrollWidth	+'px'
+		editor.style.height	= div.style.height	= editor.scrollHeight	+'px'
 	}
 	let delaychange
 	let inputtextarea = e=>{
 		clearTimeout(delaychange)
 		delaychange = setTimeout(changetextarea,333,e.currentTarget,)
-		resizetextarea()
+		//resizetextarea()
 	}
-	let changetextarea = ta=>getspan(getid(ta)).textContent = ta.value
+	let changetextarea = ta=>getspan(getid(ta)).textContent = ta.textContent//ta.value
 	let tahover = e=>{
 		let id = getid(e.currentTarget)
 		let ta = gettextarea(id)
@@ -234,7 +269,8 @@ let taa = {}
 		break
 		}
 	}
-	let resizetextarea = taa.resizetextarea = e=>{
+	/*
+	let resizetextarea = taa.resizetextarea = editor=>{
 		for(let line of area.children){
 			line.style.height = '0px'
 			let h = 0
@@ -246,9 +282,9 @@ let taa = {}
 			line.style.height = h+'px'
 		}
 	}
+	*/
 	let fhsave//file handle
 	let fhexport//file handle
-	//let wri//writable
 	let fsave = async ()=>{
 		let json = []
 		
@@ -268,7 +304,7 @@ let taa = {}
 					})
 				}
 				arrdivline.push({
-					text	:ta.value	,
+					text	:getspan(getid(ta)).textContent	,
 					visible	:!ta.classList.contains('tatutup')	,
 					time	:attr(tbody,'time',)	,
 					speed	:attr(tbody,'speed',)	,
@@ -277,27 +313,12 @@ let taa = {}
 				})
 			}
 		}
-		/*
-		fhsave?.createWritable()
-		.then(paramwri=>
-			(wri = paramwri).write(lih(JSON.stringify(json,null,'\t',)))
-		).then(()=>
-			wri.close()
-		).catch(lih)
-		*/
 		if(!fhsave){return}
 		let wri = await fhsave.createWritable()
 		await wri.write(lih(JSON.stringify(json,null,'\t',)))
 		await wri.close()
 	}
 	let fsaveas = async ()=>{
-		/*
-		showSaveFilePicker()
-		.then(paramfhsave=>{//file handle
-			attr(save,'mousedescr','Save '+lih(fhsave = paramfhsave).name,)
-			fsave()
-		}).catch(lih)
-		*/
 		fhsave = await showSaveFilePicker()
 		attr(save,'mousedescr','Save '+fhsave.name,)
 		fsave()
@@ -356,6 +377,9 @@ let taa = {}
 			rgbval(tr_b,i,)*(-w+1)+rgbval(tr_b,i+1,)*w,
 			1,
 		)
+		if(ta.firstElementChild){
+			ta.firstElementChild.style.color = ta.style.color
+		}
 	}
 	let updtime = tbody=>inptime.value = (+attr(tbody,'time',)).toFixed(5)
 	let updspeed = tbody=>inpspeed.value = (+attr(tbody,'speed',)).toFixed(5)
@@ -446,15 +470,23 @@ let taa = {}
 			}
 			;taawal = taawal??divline.firstElementChild
 		}
-		taawal.focus()
+		//taawal.focus()
+		f_tafocus(taawal)
+	}
+	let ftash = (ta,tampil,)=>{
+		let c = ta.classList
+		let s = 'tatutup'
+		c[tampil?'remove':'add'](s)
+		ta.textContent = tampil?getspan(getid(ta)).textContent:''
 		
+		updtash(ta)
 	}
 	
 	//
-	tash.addEventListener('click',()=>{
-		tadipilih.classList.toggle('tatutup')
-		updtash(tadipilih)
-	})
+	tash.addEventListener('click',()=>ftash(
+		tadipilih	,
+		tadipilih.classList.contains('tatutup')	,
+	),)
 	que('#deletecolor')[0].addEventListener('click',()=>{
 		let arrtd = Array.from(que('tbody.muncul .colordipilih'))
 		let td_framesibling = 
@@ -491,11 +523,12 @@ let taa = {}
 		let spanpar = span.parentElement
 		let foceve = new FocusEvent('focus')
 		
-		if(que('#area textarea').length > 1){
+		if(que('#area > div > div').length > 1){
 			tbody.remove()
 			ta.remove()
 			span.remove()
-			tasib.dispatchEvent(foceve)
+			//tasib.dispatchEvent(foceve)
+			//f_tafocus(tasib)
 		}
 		if(!tapar.children.length){
 			tapar.remove()
@@ -538,10 +571,10 @@ let taa = {}
 		moutex.style.top = y+'px'
 	})
 	que('#newline')[0].addEventListener('click',()=>{
-		f_newline().firstElementChild.focus()
+		f_tafocus(f_newline().firstElementChild)
 	},)
 	que('#newtextarea')[0].addEventListener('click',()=>{
-		f_newta().focus()
+		f_tafocus(f_newta())
 	},)
 	que('#open')[0].addEventListener('click',async ()=>{
 		let pickfile = await showOpenFilePicker()
@@ -564,7 +597,7 @@ let taa = {}
 	que('#newproject')[0].addEventListener('click',()=>{
 		if(!confirm('Some changes may not be saved.')){return}
 		femptyproject()
-		f_newline('',true,0,1,false,defaultarrcolor,).firstElementChild.focus()
+		f_tafocus(f_newline('',true,0,1,false,defaultarrcolor,).firstElementChild)
 	},)
 	que('#exportas')[0].addEventListener('click',fexportas,)
 	que('#export')[0].addEventListener('click',()=>fhexport?fexport():fexportas(),)
@@ -604,45 +637,12 @@ let taa = {}
 		document.exitPointerLock()
 	})
 	addEventListener('load',async ()=>{
-		let res = await fetch('testproject/selamatdatang.json')//sampe sini
+		let res = await fetch('testproject/selamatdatang.json')
 		let json = await res.json()
 		execjson(json)
 		requestAnimationFrame(reqani)
-		/*
-		return 0
-		f_newline('Welcome!',true,0,1,true,[
-			{
-				r	:255	,
-				g	:255	,
-				b	:255	,
-				frame	:0	,
-			},
-			{
-				r	:111	,
-				g	:111	,
-				b	:111	,
-				frame	:.4	,
-			},
-			{
-				r	:0	,
-				g	:255	,
-				b	:255	,
-				frame	:.9	,
-			},
-			{
-				r	:0	,
-				g	:111	,
-				b	:0	,
-				frame	:1.3	,
-			},
-		]).firstElementChild.focus()
-		requestAnimationFrame(reqani)
-		*/
 	})
-	/*
-	button	speed
 	
-	*/
 	//
 	
 	//
