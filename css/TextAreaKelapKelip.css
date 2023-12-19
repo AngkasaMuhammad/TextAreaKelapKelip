@@ -10,6 +10,21 @@ body,textarea{
 	font-size:15px;
 }
 textarea{
+	border:none;
+	resize:none;
+	text-wrap:nowrap;
+	padding:0px;
+	overflow:hidden;
+	min-width:7px;
+	min-height:7px;
+}
+textarea:focus{
+	background:#111122;
+	outline:none;
+}
+textarea,
+#hasil,
+#area > div > div{
 	tab-size:4;
 }
 svg{
@@ -43,6 +58,9 @@ td > input{
 	background:none;
 	width:50px;
 }
+/*baru*/
+
+/*============*/
 #moutex{
 	text-wrap: nowrap;
 	background:#000000bb;
@@ -102,7 +120,7 @@ td > input{
 #area > div{
 	display:flex;
 }
-#area > div > textarea{
+#area > div > div{
 	text-wrap: nowrap;
 	background:#00224400;
 	color:white;
@@ -113,6 +131,8 @@ td > input{
 	border:none;
 	padding:0px;
 	min-width:6px;
+	min-height:16px;
+	white-space:pre;
 }
 #area > div > textarea:placeholder-shown{
 	background:#553300;
@@ -124,10 +144,6 @@ td > input{
 	outline-offset: -2px;
 }
 */
-#area > div > textarea:focus{
-	background:#111155;
-	outline:none;
-}
 #hasil{
 	text-wrap:nowrap;
 	flex:auto;
@@ -139,6 +155,10 @@ td > input{
 
 .tatutup{
 	width:0px !important;
+	height:0px !important;
+	/*background:currentColor !important;*/
+}
+.tatutup:not(.tahover){
 	background:currentColor !important;
 }
 .nyala{
@@ -148,7 +168,7 @@ td > input{
 	background:#990000;
 }
 .dipilih:not(.tatutup){
-	background:#003333 !important;
+	background:#001111 !important;
 }
 .colordipilih{
 	background:#553355 !important;
@@ -169,6 +189,9 @@ td > input{
 .tahover{
 	outline: 2px dashed currentColor;
 	outline-offset: -2px;
+}
+.diedit{
+	display:none;
 }
 
 
