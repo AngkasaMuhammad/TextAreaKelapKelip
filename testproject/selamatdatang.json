@@ -3,7 +3,7 @@
 		{
 			"text": "Selamat Datang!!!\n\n",
 			"visible": true,
-			"time": "17084.082270270927",
+			"time": "17430.847504503246",
 			"speed": "7.981981981981975",
 			"running": true,
 			"color": [
@@ -55,8 +55,8 @@
 	[
 		{
 			"text": "Text Area ",
-			"visible": true,
-			"time": "10276.015200002039",
+			"visible": false,
+			"time": "10297.73695000251",
 			"speed": ".5",
 			"running": true,
 			"color": [
@@ -77,7 +77,7 @@
 		{
 			"text": "Kelap Kelip\t",
 			"visible": true,
-			"time": "268.22680000000696",
+			"time": "289.94855000000916",
 			"speed": ".5",
 			"running": true,
 			"color": [
@@ -100,7 +100,7 @@
 		{
 			"text": "Text ",
 			"visible": true,
-			"time": "6108.040241441152",
+			"time": "6238.370741441295",
 			"speed": "3",
 			"running": true,
 			"color": [
@@ -156,8 +156,8 @@
 		},
 		{
 			"text": "Area ",
-			"visible": true,
-			"time": "5032.017006305443",
+			"visible": false,
+			"time": "5162.347506305586",
 			"speed": "3",
 			"running": true,
 			"color": [
@@ -201,8 +201,8 @@
 		},
 		{
 			"text": "Kelap ",
-			"visible": true,
-			"time": "2751.291900000041",
+			"visible": false,
+			"time": "2881.6223999999006",
 			"speed": "3",
 			"running": true,
 			"color": [
@@ -259,7 +259,7 @@
 		{
 			"text": "Kelip",
 			"visible": true,
-			"time": "724.3687000000356",
+			"time": "767.81220000004",
 			"speed": "1",
 			"running": true,
 			"color": [
