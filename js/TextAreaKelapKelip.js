@@ -503,7 +503,8 @@ let taa = {}
 		updwarnatext(que('tbody.muncul')[0])
 		td_framesibling.firstElementChild.dispatchEvent(new FocusEvent('focus'))
 	})
-	que('#deletetextarea')[0].addEventListener('click',()=>{
+	que('#deletetextarea')[0].addEventListener('click',e=>{
+		if(e.details%2){return 0}
 		let id = getid(tadipilih)
 		let tbody = gettbody(id)
 		let ta = gettextarea(id)
