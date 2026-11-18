@@ -446,7 +446,7 @@ let taa = {}
 		
 		attr(save,'mousedescr','Save',)
 		attr(que('#export')[0],'mousedescr','Export',)
-		fhsave = null
+		fhsave = fhexport = null
 	}
 	let execjson = json=>{
 		lih(json)
